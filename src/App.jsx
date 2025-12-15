@@ -172,21 +172,6 @@ function App() {
               onClick={() => setSelectedProduct(product)}
             />
           ))}
-          {isAdmin && (
-            <div
-              onClick={handleAdd}
-              style={{
-                border: '2px dashed #eee',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                minHeight: '200px'
-              }}
-            >
-              + Add Item
-            </div>
-          )}
         </div>
       </main>
 
