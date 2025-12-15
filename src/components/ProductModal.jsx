@@ -44,6 +44,7 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
             if (descriptionRef.current) {
                 // Focus and place cursor at end
                 descriptionRef.current.focus();
+                descriptionRef.current.select();
             }
         }
     };
@@ -208,18 +209,28 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
                                 }}
                                 placeholder="Description"
                             />
-                            <input
-                                value={editedProduct.sponsoredLink || ''}
-                                onChange={(e) => handleChange('sponsoredLink', e.target.value)}
-                                onClick={(e) => e.stopPropagation()}
-                                style={{
-                                    fontSize: '0.9rem', color: 'var(--color-text-muted)',
-                                    marginTop: '1rem',
-                                    border: 'none', background: 'transparent', outline: 'none',
-                                    width: '100%', padding: 0, fontStyle: 'italic'
-                                }}
-                                placeholder="Add a sponsored link..."
-                            />
+                            <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }} onClick={(e) => e.stopPropagation()}>
+                                <input
+                                    value={editedProduct.price || ''}
+                                    onChange={(e) => handleChange('price', e.target.value)}
+                                    style={{
+                                        fontSize: '0.9rem', color: 'var(--color-text)',
+                                        border: '1px solid var(--color-border)', background: 'transparent',
+                                        width: '80px', padding: '5px', borderRadius: '4px'
+                                    }}
+                                    placeholder="Price"
+                                />
+                                <input
+                                    value={editedProduct.sponsoredLink || ''}
+                                    onChange={(e) => handleChange('sponsoredLink', e.target.value)}
+                                    style={{
+                                        fontSize: '0.9rem', color: 'var(--color-text-muted)',
+                                        border: '1px solid var(--color-border)', background: 'transparent',
+                                        flex: 1, padding: '5px', borderRadius: '4px'
+                                    }}
+                                    placeholder="Link URL..."
+                                />
+                            </div>
                         </>
                     ) : (
                         <>
@@ -236,15 +247,29 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
                                 {product.description}
                             </p>
                             {product.sponsoredLink && (
-                                <a
-                                    href={product.sponsoredLink}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    onClick={(e) => e.stopPropagation()}
-                                    style={{ marginTop: '1rem', color: 'var(--color-text-muted)', textDecoration: 'none', fontSize: '0.9rem' }}
-                                >
-                                    Shop Link ↗
-                                </a>
+                                <div style={{ marginTop: '1rem' }}>
+                                    <a
+                                        href={product.sponsoredLink}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                        style={{
+                                            display: 'inline-block',
+                                            textDecoration: 'none',
+                                            fontSize: '0.9rem',
+                                            padding: '8px 16px',
+                                            borderRadius: '20px',
+                                            border: '1px solid var(--color-border)',
+                                            color: 'var(--color-text)',
+                                            backgroundColor: 'var(--color-card-hover)',
+                                            fontWeight: 500
+                                        }}
+                                        onMouseEnter={(e) => e.target.style.borderColor = '#999'}
+                                        onMouseLeave={(e) => e.target.style.borderColor = 'var(--color-border)'}
+                                    >
+                                        {product.price ? product.price : 'Shop'} ↗
+                                    </a>
+                                </div>
                             )}
                         </>
                     )}
