@@ -92,11 +92,12 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
             onClick={onClose}
             style={{
                 position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                backgroundColor: 'var(--color-bg-modal)',
                 zIndex: 1000,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 opacity: 1, transition: 'opacity 0.2s ease',
-                cursor: 'pointer' // Indicate clickable
+                cursor: 'pointer',
+                backdropFilter: 'blur(5px)'
             }}
         >
             <div
@@ -107,7 +108,8 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
                     width: '100%', maxWidth: '1200px', height: '90vh',
                     display: 'grid', gridTemplateColumns: '1.5fr 1fr',
                     gap: '4rem', padding: '2rem',
-                    cursor: 'default'
+                    cursor: 'default',
+                    color: 'var(--color-text)'
                 }}
             >
                 {/* Image Section */}
@@ -134,17 +136,18 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
                     {isEditable && showImageMenu && (
                         <div style={{
                             position: 'absolute',
-                            backgroundColor: 'white',
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                            backgroundColor: 'var(--color-bg-menu)',
+                            boxShadow: 'var(--shadow-menu)',
                             borderRadius: '8px',
                             padding: '10px',
                             display: 'flex', flexDirection: 'column', gap: '8px',
-                            zIndex: 10
+                            zIndex: 10,
+                            border: '1px solid var(--color-border)'
                         }}>
-                            <button onClick={() => handleImageMenuAction('upload')}>Upload from computer</button>
-                            <button onClick={() => handleImageMenuAction('copy')}>Copy image</button>
-                            <button onClick={() => handleImageMenuAction('download')}>Download image</button>
-                            <button onClick={() => handleImageMenuAction('shop')}>Shop</button>
+                            <button onClick={() => handleImageMenuAction('upload')} style={{ color: 'var(--color-text)' }}>Upload from computer</button>
+                            <button onClick={() => handleImageMenuAction('copy')} style={{ color: 'var(--color-text)' }}>Copy image</button>
+                            <button onClick={() => handleImageMenuAction('download')} style={{ color: 'var(--color-text)' }}>Download image</button>
+                            <button onClick={() => handleImageMenuAction('shop')} style={{ color: 'var(--color-text)' }}>Shop</button>
                             <input
                                 type="file"
                                 ref={fileInputRef}
@@ -152,6 +155,20 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
                                 onChange={handleImageUpload}
                                 accept="image/*"
                             />
+                        </div>
+                    )}
+
+                    {isEditable && (
+                        <div style={{
+                            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            opacity: 0, transition: 'opacity 0.2s',
+                            pointerEvents: showImageMenu ? 'none' : 'auto' // Prevent interfering if menu open? Actually, keeping as is.
+                        }}
+                            onMouseEnter={(e) => e.currentTarget.style.opacity = 1}
+                            onMouseLeave={(e) => e.currentTarget.style.opacity = 0}
+                        >
+                            {/* Only show "Paste" hint if menu not open, purely extra UI. Skipping changes to keep simple. */}
                         </div>
                     )}
                 </div>
@@ -171,7 +188,7 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
                                 style={{
                                     fontSize: '2rem', marginBottom: '1rem', fontWeight: 600,
                                     border: 'none', background: 'transparent', outline: 'none',
-                                    width: '100%', padding: 0
+                                    width: '100%', padding: 0, color: 'var(--color-text)'
                                 }}
                                 placeholder="Product Name"
                             />
@@ -181,7 +198,7 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
                                 onChange={(e) => handleChange('description', e.target.value)}
                                 onKeyDown={handleDescriptionKeyDown}
                                 style={{
-                                    fontSize: '1.1rem', lineHeight: 1.6, color: '#444',
+                                    fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--color-text-muted)',
                                     height: '200px', border: 'none', background: 'transparent', outline: 'none',
                                     resize: 'none', width: '100%', fontFamily: 'inherit', padding: 0
                                 }}
@@ -191,7 +208,7 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
                                 value={editedProduct.sponsoredLink || ''}
                                 onChange={(e) => handleChange('sponsoredLink', e.target.value)}
                                 style={{
-                                    fontSize: '0.9rem', color: '#666',
+                                    fontSize: '0.9rem', color: 'var(--color-text-muted)',
                                     marginTop: '1rem',
                                     border: 'none', background: 'transparent', outline: 'none',
                                     width: '100%', padding: 0, fontStyle: 'italic'
@@ -201,8 +218,8 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
                         </>
                     ) : (
                         <>
-                            <h2 style={{ fontSize: '2rem', marginBottom: '1rem', fontWeight: 600 }}>{product.name}</h2>
-                            <p style={{ fontSize: '1.1rem', lineHeight: 1.6, color: '#444' }}>
+                            <h2 style={{ fontSize: '2rem', marginBottom: '1rem', fontWeight: 600, color: 'var(--color-text)' }}>{product.name}</h2>
+                            <p style={{ fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--color-text-muted)' }}>
                                 {product.description}
                             </p>
                             {product.sponsoredLink && (
@@ -210,7 +227,7 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
                                     href={product.sponsoredLink}
                                     target="_blank"
                                     rel="noreferrer"
-                                    style={{ marginTop: '1rem', color: '#888', textDecoration: 'none', fontSize: '0.9rem' }}
+                                    style={{ marginTop: '1rem', color: 'var(--color-text-muted)', textDecoration: 'none', fontSize: '0.9rem' }}
                                 >
                                     Shop Link ↗
                                 </a>
@@ -234,12 +251,12 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
                             if (onDelete(product.id)) onClose();
                         }}
                         style={{
-                            fontSize: '0.8rem', color: '#999',
+                            fontSize: '0.8rem', color: 'var(--color-text-muted)',
                             cursor: 'pointer',
                             padding: '10px'
                         }}
                         onMouseEnter={(e) => e.target.style.color = '#ff4444'}
-                        onMouseLeave={(e) => e.target.style.color = '#999'}
+                        onMouseLeave={(e) => e.target.style.color = 'var(--color-text-muted)'}
                     >
                         Delete Item
                     </span>

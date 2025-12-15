@@ -203,9 +203,9 @@ function App() {
       <footer style={{
         position: 'fixed', bottom: 0, left: 0, right: 0,
         padding: '1rem 4rem',
-        color: '#ccc', fontSize: '0.8rem',
+        color: 'var(--color-text-muted)', fontSize: '0.8rem',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        backgroundColor: 'rgba(255,255,255,0.9)',
+        backgroundColor: 'var(--color-bg-modal)',
         backdropFilter: 'blur(10px)',
         zIndex: 900
       }}>
@@ -225,8 +225,8 @@ function App() {
                   position: 'absolute',
                   left: '100%',
                   marginLeft: '10px',
-                  backgroundColor: '#333',
-                  color: 'white',
+                  backgroundColor: 'var(--color-text)',
+                  color: 'var(--color-bg)',
                   padding: '4px 8px',
                   borderRadius: '4px',
                   fontSize: '0.7rem',
