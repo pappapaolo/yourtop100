@@ -91,7 +91,7 @@ function App() {
   const handleExport = () => {
     const dataStr = JSON.stringify(products, null, 2);
     navigator.clipboard.writeText(dataStr);
-    alert("Configuration copied to clipboard!");
+    showToastMessage("Configuration copied to clipboard!");
   };
 
   const handleReset = () => {
@@ -104,35 +104,42 @@ function App() {
   // Paste logic (same as before)
   useEffect(() => {
     if (!isAdmin) return;
-    const handlePaste = (e) => {
+    const handlePaste = async (e) => { // Made async
       if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
 
       const items = (e.clipboardData || e.originalEvent.clipboardData).items;
       for (let i = 0; i < items.length; i++) {
         if (items[i].type.indexOf("image") !== -1) {
           const blob = items[i].getAsFile();
-          const reader = new FileReader();
+          try {
+            const compressedDataUrl = await compressImage(blob); // Use compressImage
 
-          reader.onload = (event) => {
-            const base64 = event.target.result;
             const newProd = {
               id: Date.now(),
               name: 'New Item',
-              image: base64,
+              image: compressedDataUrl, // Use compressed image
               description: 'New pasted item.'
             };
 
             // Use functional update to avoid stale closure
             setProducts(current => {
               const updated = [...current, newProd];
-              localStorage.setItem('yourtop100_data', JSON.stringify(updated));
-              return updated;
+              try {
+                localStorage.setItem('yourtop100_data', JSON.stringify(updated));
+                return updated;
+              } catch (err) {
+                console.error("Storage full!", err);
+                showToastMessage("⚠️ Storage full! Image not saved.");
+                return current; // Don't add if storage is full
+              }
             });
 
             // Open modal immediately
             setSelectedProduct(newProd);
-          };
-          reader.readAsDataURL(blob);
+          } catch (err) {
+            console.error("Paste error", err);
+            showToastMessage("Error processing image.");
+          }
         }
       }
     };

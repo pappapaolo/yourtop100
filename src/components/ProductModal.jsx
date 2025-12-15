@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { compressImage } from '../utils/imageUtils';
 
 const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
     const [editedProduct, setEditedProduct] = useState(product);
@@ -57,15 +58,17 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete }) => {
     };
 
 
-    const handleImageUpload = (e) => {
+    const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                handleChange('image', event.target.result);
+            try {
+                const compressedBase64 = await compressImage(file);
+                handleChange('image', compressedBase64);
                 setShowImageMenu(false);
-            };
-            reader.readAsDataURL(file);
+            } catch (err) {
+                console.error("Image upload failed", err);
+                alert("Failed to process image.");
+            }
         }
     };
 
