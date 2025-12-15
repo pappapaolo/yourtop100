@@ -150,12 +150,14 @@ function App() {
         textAlign: 'center'
       }}>
         <h1 style={{
-          fontSize: '1.5rem',
-          fontWeight: 600,
-          letterSpacing: '-0.02em',
-          margin: 0
+          fontSize: '4rem',
+          fontWeight: 800,
+          marginBottom: '2rem',
+          marginTop: '2rem',
+          letterSpacing: '-0.05em',
+          color: 'var(--color-text)'
         }}>
-          My favorite stuff
+          the best things
         </h1>
       </header>
 
