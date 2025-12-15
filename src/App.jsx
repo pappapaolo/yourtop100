@@ -94,13 +94,6 @@ function App() {
     showToastMessage("Configuration copied to clipboard!");
   };
 
-  const handleReset = () => {
-    if (confirm("Reset to default list? This clears local changes.")) {
-      setProducts(APP_DATA);
-      localStorage.setItem('yourtop100_data', JSON.stringify(APP_DATA));
-    }
-  }
-
   // Paste logic (same as before)
   useEffect(() => {
     if (!isAdmin) return;
@@ -209,10 +202,11 @@ function App() {
             <>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 <button onClick={() => {
-                  navigator.clipboard.writeText(window.location.origin);
+                  const url = window.location.origin + window.location.pathname;
+                  navigator.clipboard.writeText(url);
                   setShowToast(true);
                   setTimeout(() => setShowToast(false), 2000);
-                }} style={{ fontWeight: 500, color: '#444' }}>
+                }} style={{ fontWeight: 500, color: 'var(--color-text-muted)' }}>
                   🔗 Copy Public Link
                 </button>
                 <span style={{
@@ -226,21 +220,20 @@ function App() {
                   fontSize: '0.7rem',
                   opacity: showToast ? 1 : 0,
                   transform: showToast ? 'translateX(0)' : 'translateX(-10px)',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.3s ease',
                   pointerEvents: 'none',
                   whiteSpace: 'nowrap'
                 }}>
                   Copied!
                 </span>
               </div>
-              <span style={{ color: '#eee' }}>|</span>
-              <button onClick={handleReset}>Reset</button>
-              <button onClick={handleExport}>Export</button>
-              <span style={{ color: '#eee' }}>|</span>
+              <span style={{ color: 'var(--color-border)', margin: '0 10px' }}>|</span>
+              <button onClick={handleExport} style={{ color: 'var(--color-text-muted)' }}>Export</button>
+              <span style={{ color: 'var(--color-border)', margin: '0 10px' }}>|</span>
               <button onClick={() => {
                 localStorage.removeItem('isAdmin');
                 setIsAdmin(false);
-              }} style={{ color: '#999' }}>Exit Admin</button>
+              }} style={{ color: 'var(--color-text-muted)' }}>Exit Admin</button>
             </>
           ) : (
             <div style={{ opacity: 0 }}>.</div>
