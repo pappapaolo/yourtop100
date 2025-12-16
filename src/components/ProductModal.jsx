@@ -282,18 +282,18 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete, isCritic
                         center: { x: 0, opacity: 1 },
                         exit: (direction) => ({
                             x: direction < 0 ? '100vw' : direction > 0 ? '-100vw' : 0,
-                            opacity: direction === 0 ? 1 : 1 // Keep solid
+                            opacity: direction === 0 ? 1 : 1
                         })
                     }}
                     initial="enter"
                     animate="center"
                     exit="exit"
                     transition={{
-                        x: { type: "spring", stiffness: 300, damping: 30 },
+                        x: { type: "spring", stiffness: 300, damping: 60 }, // Critical damping (no bounce)
                         opacity: { duration: 0.2 }
                     }}
                     className='modal-content-wrapper'
-                    onClick={(e) => e.stopPropagation()} // Stop propagation from wrapper content
+                    // REMOVED stopPropagation here to allow clicking gaps to close
                     style={{
                         position: 'relative',
                         width: '100%', maxWidth: '1200px', height: '90vh',
@@ -301,20 +301,18 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete, isCritic
                         gap: '4rem', padding: '2rem',
                         cursor: 'default',
                         color: 'var(--color-text)',
-                        pointerEvents: 'none'
+                        // pointerEvents: 'none' removed - let normal events bubble
                     }}
                 >
-                    {/* Image Section */}
+                    {/* Image Section - explicitly stop propagation on content */}
                     <div
+                        onClick={(e) => e.stopPropagation()}
                         style={{
                             display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative',
                             height: '100%',
-                            pointerEvents: 'auto'
                         }}
                     >
                         <motion.img
-                            // ONLY uses layoutId if Opening/Closing (direction === 0)
-                            // This prevents "flying from grid" during sideways navigation
                             layoutId={direction === 0 ? `product-image-${product.id}` : undefined}
                             src={editedProduct.image}
                             alt={editedProduct.name}
@@ -380,14 +378,13 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete, isCritic
                         )}
                     </div>
 
-                    {/* Text/Inputs Section */}
+                    {/* Text/Inputs Section - explicitly stop propagation on content */}
                     <motion.div
-                        // Add exit fade for text specifically
+                        onClick={(e) => e.stopPropagation()}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.1 }}
                         style={{
                             display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingRight: '2rem',
-                            pointerEvents: 'auto'
                         }}
                     >
                         {isEditable ? (
@@ -409,7 +406,7 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete, isCritic
                                     ref={nameInputRef}
                                     value={editedProduct.name}
                                     onChange={(e) => handleChange('name', e.target.value)}
-                                    onClick={(e) => e.stopPropagation()}
+                                    // Removed redundant stopPropagation
                                     onKeyDown={handleNameKeyDown}
                                     style={{
                                         fontSize: '2rem', marginBottom: '1rem', fontWeight: 600,
