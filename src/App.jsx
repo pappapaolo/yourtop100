@@ -116,6 +116,11 @@ function App() {
         if (items[i].type.indexOf("image") !== -1) {
           console.log("Image found, processing...");
           const blob = items[i].getAsFile();
+          if (!blob) {
+            console.error("Clipboard item is not a file/blob");
+            showToastMessage("Error: Clipboard data empty.");
+            continue;
+          }
           try {
             const compressedDataUrl = await compressImage(blob); // Use compressImage
 
@@ -143,7 +148,7 @@ function App() {
             setSelectedProduct(newProd);
           } catch (err) {
             console.error("Paste error", err);
-            showToastMessage("Error processing image.");
+            showToastMessage("Error: " + (err.message || "Failed to process image"));
           }
         }
       }
