@@ -169,10 +169,12 @@ function App() {
             setProducts(current => {
               const updated = [...current, newProd];
               // Async save
-              set('yourtop100_data', updated).catch(err => {
-                console.error("Storage Error", err);
-                showToastMessage("⚠️ Storage full! Image not saved.");
-              });
+              set('yourtop100_data', updated)
+                .then(() => showToastMessage("Image saved to Database!"))
+                .catch(err => {
+                  console.error("Database Error", err);
+                  showToastMessage("⚠️ Database Error: " + err.message);
+                });
               return updated;
             });
 
