@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './index.css';
 import ProductCard from './components/ProductCard';
 import ProductModal from './components/ProductModal';
+import { compressImage } from './utils/imageUtils';
 
 // User's specific list
 const APP_DATA = [
