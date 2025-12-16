@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { flushSync } from 'react-dom';
 import './index.css';
 import ProductCard from './components/ProductCard';
 import ProductModal from './components/ProductModal';
@@ -363,9 +362,7 @@ function App() {
           <ProductModal
             product={selectedProduct}
             onClose={() => {
-              flushSync(() => {
-                setDirection(0);
-              });
+              setDirection(0);
               setSelectedProduct(null);
             }}
             isEditable={isAdmin}

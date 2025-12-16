@@ -377,151 +377,155 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete, isCritic
                         )}
                     </div>
 
-                    {/* Text/Inputs Section - explicitly stop propagation on content */}
+                    {/* Text/Inputs Section */}
                     <motion.div
-                        onClick={(e) => e.stopPropagation()}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.1 }}
                         style={{
                             display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingRight: '2rem',
                         }}
                     >
-                        {isEditable ? (
-                            <>
-                                {isCriticalStorage && (
-                                    <div style={{
-                                        color: '#ff4444',
-                                        fontWeight: 'bold',
-                                        marginBottom: '1rem',
-                                        border: '1px solid #ff4444',
-                                        padding: '8px',
-                                        borderRadius: '4px',
-                                        fontSize: '0.9rem'
-                                    }}>
-                                        ⚠️ Storage Full. Changes may not save.
-                                    </div>
-                                )}
-                                <input
-                                    ref={nameInputRef}
-                                    value={editedProduct.name}
-                                    onChange={(e) => handleChange('name', e.target.value)}
-                                    // Removed redundant stopPropagation
-                                    onKeyDown={handleNameKeyDown}
-                                    style={{
-                                        fontSize: '2rem', marginBottom: '1rem', fontWeight: 600,
-                                        border: 'none', background: 'transparent', outline: 'none',
-                                        width: '100%', padding: 0, color: 'var(--color-text)'
-                                    }}
-                                    placeholder="Product Name"
-                                />
-                                <textarea
-                                    ref={descriptionRef}
-                                    value={editedProduct.description}
-                                    onChange={(e) => handleChange('description', e.target.value)}
-                                    onClick={(e) => e.stopPropagation()}
-                                    onKeyDown={handleDescriptionKeyDown}
-                                    style={{
-                                        fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--color-text-muted)',
-                                        height: '200px', border: 'none', background: 'transparent', outline: 'none',
-                                        resize: 'none', width: '100%', fontFamily: 'inherit', padding: 0
-                                    }}
-                                    placeholder="Description"
-                                />
-                                <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }} onClick={(e) => e.stopPropagation()}>
+                        {/* Interactive Content Container - Blocks clicks only on the actual content */}
+                        <div onClick={(e) => e.stopPropagation()} style={{ width: '100%' }}>
+                            {isEditable ? (
+                                <>
+                                    {isCriticalStorage && (
+                                        <div style={{
+                                            color: '#ff4444',
+                                            fontWeight: 'bold',
+                                            marginBottom: '1rem',
+                                            border: '1px solid #ff4444',
+                                            padding: '8px',
+                                            borderRadius: '4px',
+                                            fontSize: '0.9rem'
+                                        }}>
+                                            ⚠️ Storage Full. Changes may not save.
+                                        </div>
+                                    )}
                                     <input
-                                        value={editedProduct.price || ''}
-                                        onChange={(e) => handleChange('price', e.target.value)}
+                                        ref={nameInputRef}
+                                        value={editedProduct.name}
+                                        onChange={(e) => handleChange('name', e.target.value)}
+                                        // Removed redundant stopPropagation
+                                        onKeyDown={handleNameKeyDown}
                                         style={{
-                                            fontSize: '0.9rem', color: 'var(--color-text)',
-                                            border: '1px solid var(--color-border)', background: 'transparent',
-                                            width: '80px', padding: '5px', borderRadius: '4px'
+                                            fontSize: '2rem', marginBottom: '1rem', fontWeight: 600,
+                                            border: 'none', background: 'transparent', outline: 'none',
+                                            width: '100%', padding: 0, color: 'var(--color-text)'
                                         }}
-                                        placeholder="Price"
+                                        placeholder="Product Name"
                                     />
-                                    <input
-                                        value={editedProduct.sponsoredLink || ''}
-                                        onChange={(e) => handleChange('sponsoredLink', e.target.value)}
+                                    <textarea
+                                        ref={descriptionRef}
+                                        value={editedProduct.description}
+                                        onChange={(e) => handleChange('description', e.target.value)}
+                                        onClick={(e) => e.stopPropagation()}
+                                        onKeyDown={handleDescriptionKeyDown}
                                         style={{
-                                            fontSize: '0.9rem', color: 'var(--color-text-muted)',
-                                            border: '1px solid var(--color-border)', background: 'transparent',
-                                            flex: 1, padding: '5px', borderRadius: '4px'
+                                            fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--color-text-muted)',
+                                            height: '200px', border: 'none', background: 'transparent', outline: 'none',
+                                            resize: 'none', width: '100%', fontFamily: 'inherit', padding: 0
                                         }}
-                                        placeholder="Link URL..."
+                                        placeholder="Description"
                                     />
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <h2
-                                    onClick={(e) => e.stopPropagation()}
-                                    style={{ fontSize: '2rem', marginBottom: '1rem', fontWeight: 600, color: 'var(--color-text)' }}
-                                >
-                                    {product.name}
-                                </h2>
-                                <p
-                                    onClick={(e) => e.stopPropagation()}
-                                    style={{ fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--color-text-muted)' }}
-                                >
-                                    {product.description}
-                                </p>
-                                {product.sponsoredLink && (
-                                    <div style={{ marginTop: '1rem' }}>
-                                        <a
-                                            href={product.sponsoredLink}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            onClick={(e) => e.stopPropagation()}
+                                    <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }} onClick={(e) => e.stopPropagation()}>
+                                        <input
+                                            value={editedProduct.price || ''}
+                                            onChange={(e) => handleChange('price', e.target.value)}
                                             style={{
-                                                display: 'inline-block',
-                                                textDecoration: 'none',
-                                                fontSize: '0.9rem',
-                                                padding: '8px 16px',
-                                                borderRadius: '20px',
-                                                border: '1px solid var(--color-border)',
-                                                color: 'var(--color-text)',
-                                                backgroundColor: 'var(--color-card-hover)',
-                                                fontWeight: 500
+                                                fontSize: '0.9rem', color: 'var(--color-text)',
+                                                border: '1px solid var(--color-border)', background: 'transparent',
+                                                width: '80px', padding: '5px', borderRadius: '4px'
                                             }}
-                                            onMouseEnter={(e) => e.target.style.borderColor = '#999'}
-                                            onMouseLeave={(e) => e.target.style.borderColor = 'var(--color-border)'}
-                                        >
-                                            {product.price ? product.price : 'Shop'} ↗
-                                        </a>
+                                            placeholder="Price"
+                                        />
+                                        <input
+                                            value={editedProduct.sponsoredLink || ''}
+                                            onChange={(e) => handleChange('sponsoredLink', e.target.value)}
+                                            style={{
+                                                fontSize: '0.9rem', color: 'var(--color-text-muted)',
+                                                border: '1px solid var(--color-border)', background: 'transparent',
+                                                flex: 1, padding: '5px', borderRadius: '4px'
+                                            }}
+                                            placeholder="Link URL..."
+                                        />
                                     </div>
-                                )}
-                            </>
-                        )}
+                                </>
+                            ) : (
+                                <>
+                                    <h2
+                                        onClick={(e) => e.stopPropagation()}
+                                        style={{ fontSize: '2rem', marginBottom: '1rem', fontWeight: 600, color: 'var(--color-text)' }}
+                                    >
+                                        {product.name}
+                                    </h2>
+                                    <p
+                                        onClick={(e) => e.stopPropagation()}
+                                        style={{ fontSize: '1.1rem', lineHeight: 1.6, color: 'var(--color-text-muted)' }}
+                                    >
+                                        {product.description}
+                                    </p>
+                                    {product.sponsoredLink && (
+                                        <div style={{ marginTop: '1rem' }}>
+                                            <a
+                                                href={product.sponsoredLink}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                onClick={(e) => e.stopPropagation()}
+                                                style={{
+                                                    display: 'inline-block',
+                                                    textDecoration: 'none',
+                                                    fontSize: '0.9rem',
+                                                    padding: '8px 16px',
+                                                    borderRadius: '20px',
+                                                    border: '1px solid var(--color-border)',
+                                                    color: 'var(--color-text)',
+                                                    backgroundColor: 'var(--color-card-hover)',
+                                                    fontWeight: 500
+                                                }}
+                                                onMouseEnter={(e) => e.target.style.borderColor = '#999'}
+                                                onMouseLeave={(e) => e.target.style.borderColor = 'var(--color-border)'}
+                                            >
+                                                {product.price ? product.price : 'Shop'} ↗
+                                            </a>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        </div>
                     </motion.div>
                 </motion.div>
             </AnimatePresence>
 
             {/* Fixed Bottom Right Delete Button */}
-            {isEditable && (
-                <div style={{
-                    position: 'fixed',
-                    bottom: '20px',
-                    right: '20px',
-                    zIndex: 1100
-                }}>
-                    <span
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            if (onDelete(product.id)) onClose();
-                        }}
-                        style={{
-                            fontSize: '0.8rem', color: 'var(--color-text)',
-                            opacity: 0.6,
-                            cursor: 'pointer',
-                            padding: '10px'
-                        }}
-                        onMouseEnter={(e) => { e.target.style.color = '#ff4444'; e.target.style.opacity = 1; }}
-                        onMouseLeave={(e) => { e.target.style.color = 'var(--color-text)'; e.target.style.opacity = 0.6; }}
-                    >
-                        Delete Item
-                    </span>
-                </div>
-            )}
-        </div>
+            {
+                isEditable && (
+                    <div style={{
+                        position: 'fixed',
+                        bottom: '20px',
+                        right: '20px',
+                        zIndex: 1100
+                    }}>
+                        <span
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                if (onDelete(product.id)) onClose();
+                            }}
+                            style={{
+                                fontSize: '0.8rem', color: 'var(--color-text)',
+                                opacity: 0.6,
+                                cursor: 'pointer',
+                                padding: '10px'
+                            }}
+                            onMouseEnter={(e) => { e.target.style.color = '#ff4444'; e.target.style.opacity = 1; }}
+                            onMouseLeave={(e) => { e.target.style.color = 'var(--color-text)'; e.target.style.opacity = 0.6; }}
+                        >
+                            Delete Item
+                        </span>
+                    </div>
+                )
+            }
+        </div >
     );
 };
 
