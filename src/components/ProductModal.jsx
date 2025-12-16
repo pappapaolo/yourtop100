@@ -231,7 +231,7 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete, isCritic
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0 }}
                 style={{
                     position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
                     backgroundColor: 'var(--color-bg-modal)',
@@ -290,7 +290,7 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete, isCritic
                     exit="exit"
                     transition={{
                         x: { type: "spring", stiffness: 300, damping: 60 }, // Critical damping (no bounce)
-                        opacity: { duration: 0.2 }
+                        opacity: { duration: 0 }
                     }}
                     className='modal-content-wrapper'
                     // REMOVED stopPropagation here to allow clicking gaps to close
@@ -380,7 +380,7 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete, isCritic
                     {/* Text/Inputs Section */}
                     <motion.div
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.1 }}
+                        transition={{ duration: 0 }}
                         style={{
                             display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingRight: '2rem',
                         }}
