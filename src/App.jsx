@@ -201,8 +201,11 @@ function App() {
     showToastMessage("Configuration copied to clipboard!");
   };
 
+  const [direction, setDirection] = useState(0);
+
   const handleNext = () => {
     if (!selectedProduct || products.length === 0) return;
+    setDirection(1);
     const currentIndex = products.findIndex(p => p.id === selectedProduct.id);
     const nextIndex = (currentIndex + 1) % products.length;
     setSelectedProduct(products[nextIndex]);
@@ -210,6 +213,7 @@ function App() {
 
   const handlePrev = () => {
     if (!selectedProduct || products.length === 0) return;
+    setDirection(-1);
     const currentIndex = products.findIndex(p => p.id === selectedProduct.id);
     const prevIndex = (currentIndex - 1 + products.length) % products.length;
     setSelectedProduct(products[prevIndex]);
@@ -324,7 +328,10 @@ function App() {
             <ProductCard
               key={product.id}
               product={product}
-              onClick={() => setSelectedProduct(product)}
+              onClick={() => {
+                setDirection(0);
+                setSelectedProduct(product);
+              }}
             />
           ))}
         </div>
@@ -341,6 +348,7 @@ function App() {
             isCriticalStorage={isCritical}
             onNext={handleNext}
             onPrev={handlePrev}
+            direction={direction}
           />
         )}
       </AnimatePresence>
