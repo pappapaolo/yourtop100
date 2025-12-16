@@ -25,7 +25,7 @@ const ORDER_KEY = 'yourtop100_order';
 const DATA_KEY_LEGACY = 'yourtop100_data'; // The old monolithic key
 
 import { useStorageQuota } from './hooks/useStorageQuota';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Reorder } from 'framer-motion';
 
 function App() {
   const [products, setProducts] = useState([]); // Start empty to prevent flash of old content
@@ -319,22 +319,38 @@ function App() {
       </header>
 
       <main className="container" style={{ paddingTop: 0, paddingBottom: '100px' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-          gap: '1rem',
-        }}>
+        <Reorder.Group
+          axis="y"
+          values={products}
+          onReorder={(newOrder) => {
+            setProducts(newOrder); // Optimistic UI update
+            saveOrder(newOrder.map(p => p.id)); // Persist order
+          }}
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+            gap: '1rem',
+            listStyle: 'none',
+            padding: 0
+          }}
+        >
           {Array.isArray(products) && products.map(product => (
-            <ProductCard
+            <Reorder.Item
               key={product.id}
-              product={product}
-              onClick={() => {
-                setDirection(0);
-                setSelectedProduct(product);
-              }}
-            />
+              value={product}
+              style={{ position: 'relative' }} // ensure z-index works during drag
+              whileDrag={{ scale: 1.05, zIndex: 100 }}
+            >
+              <ProductCard
+                product={product}
+                onClick={() => {
+                  setDirection(0);
+                  setSelectedProduct(product);
+                }}
+              />
+            </Reorder.Item>
           ))}
-        </div>
+        </Reorder.Group>
       </main>
 
       <AnimatePresence>
