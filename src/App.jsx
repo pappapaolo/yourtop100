@@ -23,6 +23,13 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [toastMsg, setToastMsg] = useState('Copied!');
+
+  const showToastMessage = (msg) => {
+    setToastMsg(msg);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
 
   // Load from local storage on mount
   useEffect(() => {
@@ -98,11 +105,16 @@ function App() {
   useEffect(() => {
     if (!isAdmin) return;
     const handlePaste = async (e) => { // Made async
-      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+      console.log("Paste detected");
+      if (!isAdmin) { console.log("Not admin, ignoring paste"); return; }
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) { console.log("Input focused, ignoring"); return; }
 
       const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+      console.log("Clipboard items:", items.length);
       for (let i = 0; i < items.length; i++) {
+        console.log("Checking item", i, items[i].type);
         if (items[i].type.indexOf("image") !== -1) {
+          console.log("Image found, processing...");
           const blob = items[i].getAsFile();
           try {
             const compressedDataUrl = await compressImage(blob); // Use compressImage
@@ -224,7 +236,7 @@ function App() {
                   pointerEvents: 'none',
                   whiteSpace: 'nowrap'
                 }}>
-                  Copied!
+                  {toastMsg}
                 </span>
               </div>
               <span style={{ color: 'var(--color-border)', margin: '0 10px' }}>|</span>
