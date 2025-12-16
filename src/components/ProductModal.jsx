@@ -88,9 +88,7 @@ const nameInputRef = useRef(null);
 const descriptionRef = useRef(null);
 const fileInputRef = useRef(null);
 
-useEffect(() => {
-    setEditedProduct(product);
-}, [product]);
+// Initial state set by useState(product) is sufficient because we force re-mount via key in App.jsx
 
 useEffect(() => {
     const handleEsc = (e) => {

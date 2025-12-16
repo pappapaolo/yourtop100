@@ -73,9 +73,18 @@ function App() {
   const handleProductUpdate = (updatedProduct) => {
     // Remove the ephemeral 'isNew' flag so it doesn't persist
     const { isNew, ...cleanProduct } = updatedProduct;
-    const newProducts = products.map(p => p.id === cleanProduct.id ? cleanProduct : p);
-    saveProducts(newProducts);
-    setSelectedProduct(cleanProduct); // Keep modal open (without isNew flag now)
+
+    setProducts(current => {
+      const newProducts = current.map(p => p.id === cleanProduct.id ? cleanProduct : p);
+      try {
+        localStorage.setItem('yourtop100_data', JSON.stringify(newProducts));
+      } catch (e) {
+        console.error("Save failed", e); // Should be caught by quota handler elsewhere but good safety
+      }
+      return newProducts;
+    });
+
+    setSelectedProduct(cleanProduct);
   };
 
   const handleDelete = (id) => {
@@ -200,6 +209,7 @@ function App() {
 
       {selectedProduct && (
         <ProductModal
+          key={selectedProduct.id}
           product={selectedProduct}
           onClose={() => setSelectedProduct(null)}
           isEditable={isAdmin}
