@@ -1,28 +1,39 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { compressImage } from '../utils/imageUtils';
-import { Upload, Copy, Download, Search } from 'lucide-react';
+import { Upload, Copy, Download, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-const ProductModal = ({ product, onClose, isEditable, onSave, onDelete, isCriticalStorage }) => {
+const ProductModal = ({ product, onClose, isEditable, onSave, onDelete, isCriticalStorage, onNext, onPrev }) => {
     const [editedProduct, setEditedProduct] = useState(product);
     const [showImageMenu, setShowImageMenu] = useState(false);
     const nameInputRef = useRef(null);
     const descriptionRef = useRef(null);
     const fileInputRef = useRef(null);
 
-    // Initial state set by useState(product) is sufficient because we force re-mount via key in App.jsx
+    // Update internal state when product changes (navigating)
+    useEffect(() => {
+        setEditedProduct(product);
+    }, [product]);
 
     useEffect(() => {
-        const handleEsc = (e) => {
+        const handleKeyDown = (e) => {
             if (e.key === 'Escape') onClose();
+            if (e.key === 'ArrowRight' && onNext) onNext();
+            if (e.key === 'ArrowLeft' && onPrev) onPrev();
         };
-        window.addEventListener('keydown', handleEsc);
+        window.addEventListener('keydown', handleKeyDown);
         document.body.style.overflow = 'hidden';
-
         return () => {
-            window.removeEventListener('keydown', handleEsc);
+            window.removeEventListener('keydown', handleKeyDown);
             document.body.style.overflow = 'unset';
         };
-    }, [onClose]);
+    }, [onClose, onNext, onPrev]);
+
+    const handleBackdropClick = (e) => {
+        if (e.target === e.currentTarget) {
+            onClose();
+        }
+    };
 
     // Separate effect for focus/select - ONLY for new items
     useEffect(() => {
@@ -171,18 +182,52 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete, isCritic
     if (!product) return null;
 
     return (
-        <div
+        <motion.div
+            layoutId={`product-image-${product.id}`}
             onClick={onClose}
             style={{
                 position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
                 backgroundColor: 'var(--color-bg-modal)',
                 zIndex: 1000,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                opacity: 1, transition: 'opacity 0.2s ease',
                 cursor: 'pointer',
                 backdropFilter: 'blur(5px)'
             }}
+            initial={{ backgroundColor: 'rgba(0,0,0,0)' }}
+            animate={{ backgroundColor: 'var(--color-bg-modal)' }}
+            exit={{ backgroundColor: 'rgba(0,0,0,0)', opacity: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
+            {/* Navigation Arrows */}
+            {!isEditable && onPrev && (
+                <button
+                    onClick={(e) => { e.stopPropagation(); onPrev(); }}
+                    style={{
+                        position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)',
+                        background: 'none', border: 'none', color: 'var(--color-text-muted)',
+                        cursor: 'pointer', padding: '20px', zIndex: 1001
+                    }}
+                    onMouseEnter={(e) => e.target.style.color = 'var(--color-text)'}
+                    onMouseLeave={(e) => e.target.style.color = 'var(--color-text-muted)'}
+                >
+                    <ChevronLeft size={48} />
+                </button>
+            )}
+            {!isEditable && onNext && (
+                <button
+                    onClick={(e) => { e.stopPropagation(); onNext(); }}
+                    style={{
+                        position: 'absolute', right: '20px', top: '50%', transform: 'translateY(-50%)',
+                        background: 'none', border: 'none', color: 'var(--color-text-muted)',
+                        cursor: 'pointer', padding: '20px', zIndex: 1001
+                    }}
+                    onMouseEnter={(e) => e.target.style.color = 'var(--color-text)'}
+                    onMouseLeave={(e) => e.target.style.color = 'var(--color-text-muted)'}
+                >
+                    <ChevronRight size={48} />
+                </button>
+            )}
+
             <div
                 // Clicking the white container ALSO closes, unless stopPropagation is called on children
                 onClick={onClose}
@@ -404,7 +449,7 @@ const ProductModal = ({ product, onClose, isEditable, onSave, onDelete, isCritic
                     </span>
                 </div>
             )}
-        </div>
+        </motion.div>
     );
 };
 

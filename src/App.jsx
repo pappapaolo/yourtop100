@@ -25,6 +25,7 @@ const ORDER_KEY = 'yourtop100_order';
 const DATA_KEY_LEGACY = 'yourtop100_data'; // The old monolithic key
 
 import { useStorageQuota } from './hooks/useStorageQuota';
+import { AnimatePresence } from 'framer-motion';
 
 function App() {
   const [products, setProducts] = useState([]); // Start empty to prevent flash of old content
@@ -200,6 +201,20 @@ function App() {
     showToastMessage("Configuration copied to clipboard!");
   };
 
+  const handleNext = () => {
+    if (!selectedProduct || products.length === 0) return;
+    const currentIndex = products.findIndex(p => p.id === selectedProduct.id);
+    const nextIndex = (currentIndex + 1) % products.length;
+    setSelectedProduct(products[nextIndex]);
+  };
+
+  const handlePrev = () => {
+    if (!selectedProduct || products.length === 0) return;
+    const currentIndex = products.findIndex(p => p.id === selectedProduct.id);
+    const prevIndex = (currentIndex - 1 + products.length) % products.length;
+    setSelectedProduct(products[prevIndex]);
+  };
+
   // Paste logic
   useEffect(() => {
     if (!isAdmin) return;
@@ -315,17 +330,21 @@ function App() {
         </div>
       </main>
 
-      {selectedProduct && (
-        <ProductModal
-          key={selectedProduct.id}
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-          isEditable={isAdmin}
-          onSave={handleProductUpdate}
-          onDelete={handleDelete}
-          isCriticalStorage={isCritical}
-        />
-      )}
+      <AnimatePresence>
+        {selectedProduct && (
+          <ProductModal
+            key={selectedProduct.id}
+            product={selectedProduct}
+            onClose={() => setSelectedProduct(null)}
+            isEditable={isAdmin}
+            onSave={handleProductUpdate}
+            onDelete={handleDelete}
+            isCriticalStorage={isCritical}
+            onNext={handleNext}
+            onPrev={handlePrev}
+          />
+        )}
+      </AnimatePresence>
 
       <footer style={{
         position: 'fixed', bottom: 0, left: 0, right: 0,

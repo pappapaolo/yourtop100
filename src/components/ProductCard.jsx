@@ -1,4 +1,4 @@
-import React from 'react';
+import { motion } from 'framer-motion';
 
 const ProductCard = ({ product, onClick }) => {
   return (
@@ -21,7 +21,8 @@ const ProductCard = ({ product, onClick }) => {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-        <img
+        <motion.img
+          layoutId={`product-image-${product.id}`}
           src={product.image}
           alt={product.name}
           style={{
@@ -29,6 +30,8 @@ const ProductCard = ({ product, onClick }) => {
             height: 'auto',
             objectFit: 'contain',
           }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
         />
       </div>
     </div>
